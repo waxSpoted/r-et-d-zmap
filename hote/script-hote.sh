@@ -9,9 +9,11 @@ read choix
 
 function installation-classic(){
 	echo "installation des dépendances" 
-	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev
+	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev git
 	echo "installation du logiciel" 
-	cd ./zmap-classic
+	git clone https://github.com/zmap/zmap.git
+ 	mv zmap zmap-classic
+ 	cd ./zmap-classic
 	cmake . 
 	make -j4 
 	sudo make install 
