@@ -23,28 +23,34 @@ function installation-classic(){
 
 function installation-openmp(){
 	echo "zmap openmp pas encore disponible"
-	#echo "installation des dépendances" 
-	#sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev
-	#echo "installation du logiciel" 
-	#cd ./zmap-openmp
-	#cmake . 
-	#make -j4 
-	#sudo make install 
-	#echo "installation de zmap openmp terminé"
-	#sudo zmap --version
-}
+	echo "installation des dépendances" 
+	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev
+	echo "installation du logiciel" 
+	sudo git clone https://github.com/zmap/zmap.git
+	sudo mv zmap zmap-openmp
+	cp ./file/code-openmp/send-openmp.c ./zmap-openmp/src/send.c
+	cd ./zmap-openmp
+	cmake . 
+	make -j4 
+	sudo make install 
+	echo "installation de zmap openmp terminé"
+}	
 
 function installation-mpi(){
+	function installation-mpi(){
 	echo "zmap mpi pas encore disponible"
-	#echo "installation des dépendances" 
-	#sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev
-	#echo "installation du logiciel" 
-	#cd ./zmap-mpi
-	#cmake . 
-	#make -j4 
-	#sudo make install 
-	#echo "installation de zmap mpi terminé"
-	#sudo zmap --version
+	echo "installation des dépendances" 
+	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev
+	echo "installation du logiciel" 
+	sudo git clone https://github.com/zmap/zmap.git
+	sudo mv zmap zmap-mpi
+	cp ./file/code-mpi/send-mpi.c ./zmap-openmp/src/send.c
+	cd ./zmap-mpi
+	cmake . 
+	make -j4 
+	sudo make install 
+	echo "installation de zmap mpi terminé"
+	sudo zmap --version
 }
 
 function installation(){
