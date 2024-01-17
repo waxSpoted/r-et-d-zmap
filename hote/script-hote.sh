@@ -18,6 +18,8 @@ function installation-classic(){
 	make -j4 
 	sudo make install 
 	echo "installation de zmap classic terminé"
+ 	cd .. 
+	sudo cp ./file/blocklist.conf /etc/zmap/blocklist.conf
 	sudo zmap --version
 }
 
@@ -34,7 +36,9 @@ function installation-openmp(){
 	make -j4 
 	sudo make install 
 	echo "installation de zmap openmp terminé"
-	sudo zmap --version
+	cd .. 
+	sudo cp ./file/blocklist.conf /etc/zmap/blocklist.conf
+ 	sudo zmap --version
 }
 
 function installation-mpi(){
@@ -50,6 +54,8 @@ function installation-mpi(){
 	make -j4 
 	sudo make install 
 	echo "installation de zmap mpi terminé"
+ 	cd .. 
+	sudo cp ./file/blocklist.conf /etc/zmap/blocklist.conf
 	sudo zmap --version
 }
 
