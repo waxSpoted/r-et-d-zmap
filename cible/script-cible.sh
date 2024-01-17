@@ -26,11 +26,14 @@ function modifport()
 	#res="TCP_IN = \"$(echo $res | cut -c12-)"
 	res="$res\""
 	echo $res > test.txt
-
+	cat test.txt | tr ',' '\n' > test2.txt
+	a=$(wc -l test2.txt)
+	b=$(echo $a | cut -c-3)
 	#remplacement des ports ouverts dans csf 
-	cmd="sed -i -e 's/.*TCP_IN.*/${res}/g' test.txt"
-	echo $cmd
-	echo "un total de $count ports ont été écrit"
+	#cmd="sed -i -e 's/.*TCP_IN.*/${res}/g' test.txt"
+	#echo $cmd
+	echo "un total de $b ports ont été écrit"
+	rm -f test2.txt
 	
 }
 
