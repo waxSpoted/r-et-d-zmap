@@ -28,7 +28,7 @@ function installation-openmp(){
 	echo "installation du logiciel" 
 	sudo git clone https://github.com/zmap/zmap.git
 	sudo mv zmap zmap-openmp
-	cp ./file/code-openmp/send-openmp.c ./zmap-openmp/src/send.c
+	cp ./file/send-openmp.c ./zmap-openmp/src/send.c
 	cd ./zmap-openmp
 	cmake . 
 	make -j4 
@@ -44,7 +44,7 @@ function installation-mpi(){
 	echo "installation du logiciel" 
 	sudo git clone https://github.com/zmap/zmap.git
 	sudo mv zmap zmap-mpi
-	cp ./file/code-mpi/send-mpi.c ./zmap-openmp/src/send.c
+	cp ./file/send-mpi.c ./zmap-openmp/src/send.c
 	cd ./zmap-mpi
 	cmake . 
 	make -j4 
