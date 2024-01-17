@@ -11,9 +11,9 @@ function installation-classic(){
 	echo "installation des dépendances" 
 	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev git
 	echo "installation du logiciel" 
-	git clone https://github.com/zmap/zmap.git
- 	mv zmap zmap-classic
- 	cd ./zmap-classic
+	sudo git clone https://github.com/zmap/zmap.git
+	sudo mv zmap zmap-classic
+	cd ./zmap-classic
 	cmake . 
 	make -j4 
 	sudo make install 
@@ -34,10 +34,10 @@ function installation-openmp(){
 	make -j4 
 	sudo make install 
 	echo "installation de zmap openmp terminé"
-}	
+	sudo zmap --version
+}
 
 function installation-mpi(){
-	function installation-mpi(){
 	echo "zmap mpi pas encore disponible"
 	echo "installation des dépendances" 
 	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev
@@ -75,7 +75,7 @@ function installation(){
 	fi
 }
 function commande(){
-	time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-32767 $ip_cible > ./file/output.csv
+	time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 $ip_cible > ./file/output.csv
 }
 
 if [ $choix == 1 ]
@@ -96,7 +96,7 @@ then
 	echo "Configuration de port 2 ?"
        	echo "Configuration de port 3 ?"
 	read conf 
-	nbport=49
+	nbport=964
 	if [ $conf == 1 ]
 	then 
 		count=0
@@ -110,9 +110,9 @@ then
 		diff=$((nbport-count))
 		if [ $count == $nbport ]
 		then
-			echo "tous les ports ont été découvert 49/49"
+			echo "tous les ports ont été découvert 964/964"
 		else 
-			echo "$diff ports n'ont pas été découvert sur 49"
+			echo "$diff ports n'ont pas été découvert sur 964"
 		fi
 
 	fi	
@@ -129,9 +129,9 @@ then
 		diff=$((nbport-count))
 		if [ $count == $nbport ]
 		then
-			echo "tous les ports ont été découvert 49/49"
+			echo "tous les ports ont été découvert 964/964"
 		else 
-			echo "$diff ports n'ont pas été découvert sur 49"
+			echo "$diff ports n'ont pas été découvert sur 964"
 		fi
 
 	fi	
@@ -149,9 +149,9 @@ then
 		diff=$((nbport-count))
 		if [ $count == $nbport ]
 		then
-			echo "tous les ports ont été découvert 49/49"
+			echo "tous les ports ont été découvert 964/964"
 		else 
-			echo "$diff ports n'ont pas été découvert sur 49"
+			echo "$diff ports n'ont pas été découvert sur 964"
 		fi
 
 	fi	
