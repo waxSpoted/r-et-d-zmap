@@ -3,11 +3,18 @@
 function modifport()
 {
 	list=()
-	for ((i=1; i<36; i++))
+	count=0
+	for ((i=1; i<987; i++))
 	do	
 		valrand=$RANDOM
 		a=$(expr $i + $valrand)
-		list+=("$a")
+		if grep -sq $a <<< ${list[@]}
+		then
+			a=0
+		else
+			count=$((count+1))
+			list+=("$a")
+		fi
 	done
 	echo ""
 	res="TCP_IN = \"20,21,22,25,53,853,80,110,143,443,465,587,993,995"
@@ -18,11 +25,12 @@ function modifport()
 	
 	#res="TCP_IN = \"$(echo $res | cut -c12-)"
 	res="$res\""
-	echo ""
+	echo $res > test.txt
 
 	#remplacement des ports ouverts dans csf 
 	cmd="sed -i -e 's/.*TCP_IN.*/${res}/g' test.txt"
 	echo $cmd
+	echo "un total de $count ports ont été écrit"
 	
 }
 
@@ -69,11 +77,12 @@ if [ -d "/etc/csf" ];then
 	echo "1 : reload csf" 
 	echo "2 : savoir les ports ouverts"
 	echo "3 : charger de nouveaux ports"
+	echo "99 : génération des ports, à éviter"
 	read choix
-	#if [ $choix == 1 ]
-	#then
-	#	modifport
-	#fi 
+	if [ $choix == 99 ]
+	then
+		modifport
+	fi 
 	if [ $choix == 1 ]
 	then
 		reload
