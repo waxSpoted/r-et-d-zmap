@@ -11,8 +11,8 @@ function installation-classic(){
 	echo "installation des dépendances" 
 	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev git
 	echo "installation du logiciel" 
-	sudo git clone https://github.com/zmap/zmap.git
-	sudo mv zmap zmap-classic
+	git clone https://github.com/zmap/zmap.git
+	mv zmap zmap-classic
 	cd ./zmap-classic
 	cmake . 
 	make -j4 
@@ -26,8 +26,8 @@ function installation-openmp(){
 	echo "installation des dépendances" 
 	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev
 	echo "installation du logiciel" 
-	sudo git clone https://github.com/zmap/zmap.git
-	sudo mv zmap zmap-openmp
+	git clone https://github.com/zmap/zmap.git
+	mv zmap zmap-openmp
 	cp ./file/send-openmp.c ./zmap-openmp/src/send.c
 	cd ./zmap-openmp
 	cmake . 
@@ -42,8 +42,8 @@ function installation-mpi(){
 	echo "installation des dépendances" 
 	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev
 	echo "installation du logiciel" 
-	sudo git clone https://github.com/zmap/zmap.git
-	sudo mv zmap zmap-mpi
+	git clone https://github.com/zmap/zmap.git
+	mv zmap zmap-mpi
 	cp ./file/send-mpi.c ./zmap-openmp/src/send.c
 	cd ./zmap-mpi
 	cmake . 
