@@ -9,6 +9,7 @@ echo "4 : execution du scan sur plusieurs machines"
 read choix 
 
 function installation-classic(){
+	sudo apt update && sudo apt upgrade -y 
 	echo "installation des dépendances" 
 	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev git
 	echo "installation du logiciel" 
@@ -25,6 +26,7 @@ function installation-classic(){
 }
 
 function installation-openmp(){
+	sudo apt update && sudo apt upgrade -y
 	echo "zmap openmp pas encore disponible"
 	echo "installation des dépendances" 
 	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev
@@ -43,6 +45,7 @@ function installation-openmp(){
 }
 
 function installation-mpi(){
+	sudo apt update && sudo apt upgrade -y
 	echo "zmap mpi pas encore disponible"
 	echo "installation des dépendances" 
 	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev
