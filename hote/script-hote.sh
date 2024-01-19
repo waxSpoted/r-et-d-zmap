@@ -5,6 +5,7 @@ ip_cible="192.168.159.131"
 echo "1 : installation zmap" 
 echo "2 : execution du scan"
 echo "3 : comparaison des resultats" 
+echo "4 : execution du scan sur plusieurs machines" 
 read choix 
 
 function installation-classic(){
@@ -82,6 +83,22 @@ function installation(){
 }
 function commande(){
 	time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 $ip_cible > ./file/output.csv
+	#time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 $ip_cible 2>automat.txt > ./file/output.csv
+}
+
+function automat(){
+	debut=$(head -n 1 ./automat.txt | cut -c1-20)
+	fin=$(tail -n 1 ./automat.txt | cut -c1-20)
+	echo "début du scan : $debut" 
+	echo "fin du scan : $fin"
+	#t_debut=$(date -d $debut +"$s")
+	#t_fin=$(date -d $fin +"$s")
+	#echo $t_debut
+	#temps=$((t_fin-t_debut))
+	#echo $temps
+	#temps=$(($fin-$debut))
+	#echo $temps
+
 }
 
 if [ $choix == 1 ]
@@ -105,6 +122,7 @@ then
 	nbport=500
 	if [ $conf == 1 ]
 	then 
+		#automat
 		count=0
 		for i in $res
 		do
@@ -124,6 +142,7 @@ then
 	fi	
 	if [ $conf == 2 ]
 	then 
+		#automat
 		count=0
 		for i in $res
 		do
@@ -144,6 +163,7 @@ then
 	
 	if [ $conf == 3 ]
 	then 
+		#automat
 		count=0
 		for i in $res
 		do
@@ -163,3 +183,24 @@ then
 	fi	
 fi
 
+if [ $choix == 4 ]
+then 
+	echo "combien de machines voulez-vous scanner ?" 
+	read nombre
+	listeIP=()
+	for (( i=1; i<=$nombre; i++ ))
+	do
+		echo "quelle est l'ip de la machine $i ?"
+		read ip
+		listeIP+=($ip)
+	done
+	nombreport=$((nombre*500))
+	nombretrouve=$(wc -l ./file/output.csv | cut -f 1 -d ' ')
+	time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 ${listeIP[@]} > ./file/output.csv
+	if [ $nombretrouve == $nombreport ]
+	then 
+		echo "tous les ports ont été trouvé $nombreport/$nombreport"
+	else
+		echo "tous les ports n'ont pas été trouvé" 
+	fi	
+fi
