@@ -198,8 +198,8 @@ then
 		listeIP+=($ip)
 	done
 	nombreport=$((nombre*500))
+ 	time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 ${listeIP[@]} > ./file/output.csv
 	nombretrouve=$(wc -l ./file/output.csv | cut -f 1 -d ' ')
-	time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 ${listeIP[@]} > ./file/output.csv
 	if [ $nombretrouve == $nombreport ]
 	then 
 		echo "tous les ports ont été trouvé $nombreport/$nombreport"
