@@ -102,7 +102,7 @@ then
 	echo "Configuration de port 2 ?"
        	echo "Configuration de port 3 ?"
 	read conf 
-	nbport=964
+	nbport=500
 	if [ $conf == 1 ]
 	then 
 		count=0
@@ -116,9 +116,9 @@ then
 		diff=$((nbport-count))
 		if [ $count == $nbport ]
 		then
-			echo "tous les ports ont été découvert 964/964"
+			echo "tous les ports ont été découvert 500/500"
 		else 
-			echo "$diff ports n'ont pas été découvert sur 964"
+			echo "$diff ports n'ont pas été découvert sur 500"
 		fi
 
 	fi	
@@ -135,9 +135,9 @@ then
 		diff=$((nbport-count))
 		if [ $count == $nbport ]
 		then
-			echo "tous les ports ont été découvert 964/964"
+			echo "tous les ports ont été découvert 500/500"
 		else 
-			echo "$diff ports n'ont pas été découvert sur 964"
+			echo "$diff ports n'ont pas été découvert sur 500"
 		fi
 
 	fi	
@@ -155,9 +155,9 @@ then
 		diff=$((nbport-count))
 		if [ $count == $nbport ]
 		then
-			echo "tous les ports ont été découvert 964/964"
+			echo "tous les ports ont été découvert 500/500"
 		else 
-			echo "$diff ports n'ont pas été découvert sur 964"
+			echo "$diff ports n'ont pas été découvert sur 500"
 		fi
 
 	fi	
