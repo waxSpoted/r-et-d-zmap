@@ -100,6 +100,7 @@ if [ -d "/etc/csf" ];then
 	fi	
 else 
 	echo "csf n'est pas installé" 
+ 	sudo apt update && sudo apt upgrade -y
 	sudo apt install wget libio-socket-ssl-perl git perl iptables libnet-libidn-perl libcrypt-ssleay-perl  libio-socket-inet6-perl libsocket6-perl sendmail dnsutils unzip
 	wget http://download.configserver.com/csf.tgz
 	tar -xvzf csf.tgz
