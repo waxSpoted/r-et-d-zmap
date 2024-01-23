@@ -1,6 +1,9 @@
 #!/bin/bash
 
-ip_cible="192.168.159.131"
+ip_cible="192.168.159.138 192.168.159.139"
+#pour les tests avec l'execution parallele des commandes zmap 
+ip_cible1="192.168.159.138"
+ip_cible2="192.168.159.139"
 
 echo "1 : installation zmap" 
 echo "2 : execution du scan"
@@ -85,10 +88,12 @@ function installation(){
 	fi
 }
 function commande(){
-	time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 $ip_cible > ./file/output.csv
-	#time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 $ip_cible 2>automat.txt > ./file/output.csv
+	time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 $ip_cible > ./file/output.csv 
+	#Commmande pour l'execution parallele des commandes zmap 
+	#sudo echo ""
+	#time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 $ip_cible1 > ./file/output1.csv &
+	#time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 $ip_cible2 > ./file/output2.csv &
 }
-
 function automat(){
 	debut=$(head -n 1 ./automat.txt | cut -c1-20)
 	fin=$(tail -n 1 ./automat.txt | cut -c1-20)
