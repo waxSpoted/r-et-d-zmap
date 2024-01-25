@@ -87,13 +87,17 @@ function installation(){
 		installation-mpi
 	fi
 }
-function commande(){
+
+function commande1(){
 	time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 $ip_cible > ./file/output.csv 
-	#Commmande pour l'execution parallele des commandes zmap 
-	#sudo echo ""
-	#time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 $ip_cible1 > ./file/output1.csv &
-	#time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 $ip_cible2 > ./file/output2.csv &
 }
+
+function commande2(){
+	sudo echo ""
+	time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 $ip_cible1 > ./file/output1.csv &
+	time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 $ip_cible2 > ./file/output2.csv &
+}
+
 function automat(){
 	debut=$(head -n 1 ./automat.txt | cut -c1-20)
 	fin=$(tail -n 1 ./automat.txt | cut -c1-20)
@@ -116,7 +120,18 @@ fi
 
 if [ $choix == 2 ]
 then 
-	commande
+	echo "voulez vous lancer le scan dans une seule commande ou dans plusieurs commandes ?"
+ 	echo "1 : une seule commande"
+  	echo "2 : plusieurs commandes"
+   	read choix2 
+    	if [ $choix2 == 1 ]
+     	then
+ 		commande1
+	fi
+ 	if [ $choix2 == 2 ]
+  	then 
+   		commande2
+     	fi
 fi
 
 if [ $choix == 3 ]
