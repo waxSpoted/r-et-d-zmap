@@ -9,6 +9,7 @@ function scan_une_machine(){
 	read default 
 	if [ $default == "Y" ] || [ $default == "y" ]
 	then 
+		sudo echo ""
 		echo $single_ip_default | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports_default {} > ports.csv
 		echo "vous pouvez voir les ports ouverts dans ports.csv"
 	else 
@@ -34,8 +35,8 @@ function scan_plusieurs_machines(){
 		sudo echo ""
 		ip1=$(echo $liste_ip_default | cut -c-15)
 		ip2=$(echo $liste_ip_default | cut -c16-31)
-		#echo "ip 1 : $ip1"
-		#echo "ip 2 : $ip2"
+#		echo "ip 1 : $ip1"
+#		echo "ip 2 : $ip2"
 		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip1 > ./file/output1.csv &
 		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip2 > ./file/output2.csv &
 	else 
@@ -50,11 +51,11 @@ function scan_plusieurs_machines(){
 		done
 		echo "Quels sont les ports que vous voulez scanner ? 1-xxxx"
 		read ports
-		#echo "liste : $liste"
+#		echo "liste : $liste"
 		ip1=$(echo $liste | cut -c-15)
 		ip2=$(echo $liste | cut -c16-31)
-		#echo "ip 1 : $ip1"
-		#echo "ip 2 : $ip2"
+#		echo "ip 1 : $ip1"
+#		echo "ip 2 : $ip2"
 		echo "exécution du scan :"
 		sudo echo ""
 		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip1 >> ./file/output.csv &
@@ -96,6 +97,7 @@ function scan_classique(){
 		read ip 
 		echo "Quels sont les ports que vous voulez scanner ? 1-xxxx"
 		read ports 
+		sudo echo ""
 		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip > ./file/output.csv 
 	fi
 }
