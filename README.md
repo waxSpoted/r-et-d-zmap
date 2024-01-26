@@ -1,11 +1,15 @@
 # recherche-zmap
-Travail de recherche sur le logiciel zmap, parallélisation avec openmp
+Travail de recherche sur le logiciel zma.
 
-chmod +x ./r-et-d-zmap/hote/script-hote.sh
+r-et-d-ebauche est l'ébauche de nos recherches sur la mise en place des différentes méthodes de parallélisation de zmap
 
-chmod +x ./r-et-d-zmap/cible/script-cible.sh
+r-et-d-final, propose un script permettant d'améliorer la performance de la tâche de découverte de port en parallélisant l'exécution des commandes zmap grâce à GNU parallel
 
-modifier dans le script "script-hote.sh" l'ip de la machine que vous voulez cibler : ip_cible="192.168.159.131"
+chmod +x ./r-et-d-final/hote/scan-ports-zmap.sh
+
+chmod +x ./r-et-d-final/cible/script-cible.sh
+
+modifier dans le script "scan-ports-zmap.sh" l'ip ou les ip des machines que vous voulez scan : single_ip_default="192.168.159.131"
 
 # machine cible 
 
