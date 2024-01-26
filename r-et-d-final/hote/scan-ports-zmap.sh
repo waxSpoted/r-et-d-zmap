@@ -2,7 +2,7 @@
 
 single_ip_default="192.168.159.138"
 liste_2ip_default="192.168.159.138 192.168.159.139"
-liste_3ip_default="192.168.159.138 192.168.159.139 192.168.159.140"
+liste_3ip_default="192.168.159.138 192.168.159.139 192.168.159.131"
 liste_4ip_default="192.168.159.138 192.168.159.139 192.168.159.140 192.168.159.131"
 ports_default="1-33767"
 
@@ -11,7 +11,7 @@ function scan_une_machine(){
 	read default 
 	if [ $default == "Y" ] || [ $default == "y" ]
 	then 
-		sudo echo ""
+		sudo echo "scan de la machine $single_ip_default"
 		echo $single_ip_default | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports_default {} > ./file/output.csv
 		nb_port=$(wc -l ./file/output.csv | tr ' ' '\n' | sed -n '1p')
 		if [ $nb_port == 500 ]
@@ -26,7 +26,7 @@ function scan_une_machine(){
 		read ip 
 		echo "Quels sont les ports que vous voulez scanner ? 1-xxxxx"
 		read ports
-		sudo echo ""
+		sudo echo "scan de la machine $ip"
 		echo $ip | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports {} > ./file/output.csv
 		nb_port=$(wc -l ./file/output.csv | tr ' ' '\n' | sed -n '1p')
 		if [ $nb_port == 500 ]
@@ -48,9 +48,9 @@ function scan_deux_machines(){
 	read default 
 	if [ $default == "Y" ] || [ $default == "y" ]
 	then 
-		sudo echo ""
 		ip1=$(echo $liste_2ip_default | tr ' ' '\n' | sed -n '1p')
 		ip2=$(echo $liste_2ip_default | tr ' ' '\n' | sed -n '2p')
+		sudo echo "scan des machines $ip1 et $ip2"
 #		echo "ip 1 : $ip1"
 #		echo "ip 2 : $ip2"
 		#Execution dans différent processus avec & 
@@ -75,7 +75,7 @@ function scan_deux_machines(){
 		#echo "ip 1 : $ip1"
 		#echo "ip 2 : $ip2"
 		echo "exécution du scan :"
-		sudo echo ""
+		sudo echo "scan des machines $ip1 et $ip2"
 		parallel --tag -j2 time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default ::: $ip1 ::: $ip2 > ./file/output.csv
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip1 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip2 >> ./file/output.csv &
@@ -101,10 +101,10 @@ function scan_trois_machines(){
 	read default 
 	if [ $default == "Y" ] || [ $default == "y" ]
 	then 
-		sudo echo ""
 		ip1=$(echo $liste_3ip_default | tr ' ' '\n' | sed -n '1p')
 		ip2=$(echo $liste_3ip_default | tr ' ' '\n' | sed -n '2p')
 		ip3=$(echo $liste_3ip_default | tr ' ' '\n' | sed -n '3p')
+		sudo echo "scan des machines $ip1 , $ip2 et $ip3"
 #		echo "ip 1 : $ip1"
 #		echo "ip 2 : $ip2"
 #		echo "ip 3 : $ip3"
@@ -130,7 +130,7 @@ function scan_trois_machines(){
 #		echo "ip 2 : $ip2"
 #		echo "ip 3 : $ip3"
 		echo "exécution du scan :"
-		sudo echo ""
+		sudo echo "scan des machines $ip1 , $ip2 et $ip3"
 		parallel --tag -j3 time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports ::: $ip1 ::: $ip2 ::: $ip3 > ./file/output.csv
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip1 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip2 >> ./file/output.csv &
@@ -156,11 +156,11 @@ function scan_quatre_machines(){
 	read default 
 	if [ $default == "Y" ] || [ $default == "y" ]
 	then 
-		sudo echo ""
 		ip1=$(echo $liste_4ip_default | tr ' ' '\n' | sed -n '1p')
 		ip2=$(echo $liste_4ip_default | tr ' ' '\n' | sed -n '2p')
 		ip3=$(echo $liste_4ip_default | tr ' ' '\n' | sed -n '3p')
 		ip4=$(echo $liste_4ip_default | tr ' ' '\n' | sed -n '4p')
+		sudo echo "scan des machines $ip1 , $ip2 , $ip3 et $ip4"
 #		echo "ip 1 : $ip1"
 #		echo "ip 2 : $ip2"
 #		echo "ip 3 : $ip3"
@@ -186,7 +186,7 @@ function scan_quatre_machines(){
 		ip3=$(echo $liste | tr ' ' '\n' | sed -n '3p')
 		ip4=$(echo $liste | tr ' ' '\n' | sed -n '4p')
 		echo "exécution du scan :"
-		sudo echo ""
+		sudo echo "scan des machines $ip1 , $ip2 , $ip3 et $ip4"
 #		echo "ip 1 : $ip1"
 #		echo "ip 2 : $ip2"
 #		echo "ip 3 : $ip3"
@@ -307,11 +307,299 @@ function installation-zmap(){
 	fi
 }
 
+function comparaison(){
+	echo "combien de machines avez-vous scanner ?"
+	read choix 
+	
+	if [ $choix == 1 ] 
+	then
+		res=0
+		echo "Quel est la configuration de port de la machine 1 ? 1/2/3"
+		read config1
+		if [ $config1 == 1 ]
+		then
+			pwd1="./file/port1.csv"
+		fi
+		if [ $config1 == 2 ]
+		then
+			pwd1="./file/port2.csv"
+		fi
+		if [ $config1 == 3 ]
+		then
+			pwd1="./file/port3.csv"
+		fi
+		
+		liste1=$(head -n 500 ./file/output.csv | awk '{print $NF}')
+		
+		for i in $liste1
+		do
+			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] 
+			then
+				res=$((res+1))
+			fi
+		done
+
+		if [ $res == 500 ]
+		then 
+			echo "tous les ports ont été trouvé" 
+		else 
+			echo "tous les ports n'ont pas été trouvé" 
+		fi
+	fi
+	
+	if [ $choix == 2 ] 
+	then
+		res=0
+		echo "Quel est la configuration de port de la machine 1 ? 1/2/3"
+		read config1
+		echo "Quel est la configuration de port de la machine 2 ? 1/2/3"
+		read config2
+		if [ $config1 == 1 ]
+		then
+			pwd1="./file/port1.csv"
+		fi
+		if [ $config1 == 2 ]
+		then
+			pwd1="./file/port2.csv"
+		fi
+		if [ $config1 == 3 ]
+		then
+			pwd1="./file/port3.csv"
+		fi
+
+		if [ $config2 == 1 ]
+		then
+			pwd2="./file/port1.csv"
+		fi
+		if [ $config2 == 2 ]
+		then
+			pwd2="./file/port2.csv"
+		fi
+		if [ $config2 == 3 ]
+		then
+			pwd2="./file/port3.csv"
+		fi
+		
+		liste1=$(sed -n '1,500p' ./file/output.csv | awk '{print $NF}')
+		liste2=$(sed -n '501,1000p' ./file/output.csv | awk '{print $NF}')
+		
+		for i in $liste1
+		do
+			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] 
+			then
+				res=$((res+1))
+			fi
+		done
+		for i in $liste2
+		do
+			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] 
+			then
+				res=$((res+1))
+			fi
+		done
+
+		if [ $res == 1000 ]
+		then 
+			echo "tous les ports ont été trouvé" 
+		else 
+			echo "tous les ports n'ont pas été trouvé" 
+		fi
+	fi
+	
+	if [ $choix == 3 ] 
+	then
+		res=0
+		echo "Quel est la configuration de port de la machine 1 ? 1/2/3"
+		read config1
+		echo "Quel est la configuration de port de la machine 2 ? 1/2/3"
+		read config2
+		echo "Quel est la configuration de port de la machine 3 ? 1/2/3"
+		read config3
+		if [ $config1 == 1 ]
+		then
+			pwd1="./file/port1.csv"
+		fi
+		if [ $config1 == 2 ]
+		then
+			pwd1="./file/port2.csv"
+		fi
+		if [ $config1 == 3 ]
+		then
+			pwd1="./file/port3.csv"
+		fi
+
+		if [ $config2 == 1 ]
+		then
+			pwd2="./file/port1.csv"
+		fi
+		if [ $config2 == 2 ]
+		then
+			pwd2="./file/port2.csv"
+		fi
+		if [ $config2 == 3 ]
+		then
+			pwd2="./file/port3.csv"
+		fi
+
+		if [ $config3 == 1 ]
+		then
+			pwd3="./file/port1.csv"
+		fi
+		if [ $config3 == 2 ]
+		then
+			pwd3="./file/port2.csv"
+		fi
+		if [ $config3 == 3 ]
+		then
+			pwd3="./file/port3.csv"
+		fi
+		
+		liste1=$(sed -n '1,500p' ./file/output.csv | awk '{print $NF}')
+		liste2=$(sed -n '501,1000p' ./file/output.csv | awk '{print $NF}')
+		liste3=$(sed -n '1001,1500p' ./file/output.csv | awk '{print $NF}')
+		
+		for i in $liste1
+		do
+			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ]
+			then
+				res=$((res+1))
+			fi
+		done
+		for i in $liste2
+		do
+			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ]
+			then
+				res=$((res+1))
+			fi
+		done
+		for i in $liste3
+		do
+			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ]
+			then
+				res=$((res+1))
+			fi
+		done
+		if [ $res == 1500 ]
+		then 
+			echo "tous les ports ont été trouvé" 
+		else 
+			echo "tous les ports n'ont pas été trouvé" 
+		fi
+	fi
+
+	if [ $choix == 4 ] 
+	then
+		echo ""
+		res=0
+		echo "Quel est la configuration de port de la machine 1 ? 1/2/3"
+		read config1
+		echo "Quel est la configuration de port de la machine 2 ? 1/2/3"
+		read config2
+		echo "Quel est la configuration de port de la machine 3 ? 1/2/3"
+		read config3
+		echo "Quel est la configuration de port de la machine 4 ? 1/2/3"
+		read config4
+		if [ $config1 == 1 ]
+		then
+			pwd1="./file/port1.csv"
+		fi
+		if [ $config1 == 2 ]
+		then
+			pwd1="./file/port2.csv"
+		fi
+		if [ $config1 == 3 ]
+		then
+			pwd1="./file/port3.csv"
+		fi
+
+		if [ $config2 == 1 ]
+		then
+			pwd2="./file/port1.csv"
+		fi
+		if [ $config2 == 2 ]
+		then
+			pwd2="./file/port2.csv"
+		fi
+		if [ $config2 == 3 ]
+		then
+			pwd2="./file/port3.csv"
+		fi
+
+		if [ $config3 == 1 ]
+		then
+			pwd3="./file/port1.csv"
+		fi
+		if [ $config3 == 2 ]
+		then
+			pwd3="./file/port2.csv"
+		fi
+		if [ $config3 == 3 ]
+		then
+			pwd3="./file/port3.csv"
+		fi
+
+		if [ $config4 == 1 ]
+		then
+			pwd4="./file/port1.csv"
+		fi
+		if [ $config4 == 2 ]
+		then
+			pwd4="./file/port2.csv"
+		fi
+		if [ $config4 == 3 ]
+		then
+			pwd4="./file/port3.csv"
+		fi
+
+		liste1=$(sed -n '1,500p' ./file/output.csv | awk '{print $NF}')
+		liste2=$(sed -n '501,1000p' ./file/output.csv | awk '{print $NF}')
+		liste3=$(sed -n '1001,1500p' ./file/output.csv | awk '{print $NF}')
+		liste4=$(sed -n '1501,2000p' ./file/output.csv | awk '{print $NF}')
+		
+		for i in $liste1
+		do
+			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ] || [ $(grep $i $pwd4) ]
+			then
+				res=$((res+1))
+			fi
+		done
+		for i in $liste2
+		do
+			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ] || [ $(grep $i $pwd4) ]
+			then
+				res=$((res+1))
+			fi
+		done
+		for i in $liste3
+		do
+			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ] || [ $(grep $i $pwd4) ]
+			then
+				res=$((res+1))
+			fi
+		done
+		for i in $liste4
+		do
+			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ] || [ $(grep $i $pwd4) ]
+			then
+				res=$((res+1))
+			fi
+		done
+		if [ $res == 2000 ]
+		then 
+			echo "tous les ports ont été trouvé" 
+		else 
+			echo "tous les ports n'ont pas été trouvé" 
+		fi
+	fi
+
+}
+
 echo "1 : scanner une machine		[parallel]"
 echo "2 : scanner deux machines	[parallel]"
 echo "3 : scanner trois machines 	[parallel]"
 echo "4 : scanner quatre machines 	[parallel]"
 echo "5 : scan classique"
+echo "6 : comparaison des résultats"
 echo "99 : installer zmap "
 read choix 
 
@@ -363,6 +651,11 @@ then
 	else 
 		echo "Veuillez installer zmap [99] avant d'exécuter un scan"
 	fi
+fi
+
+if [ $choix == 6 ]
+then
+	comparaison
 fi
 
 if [ $choix == 99 ] 
