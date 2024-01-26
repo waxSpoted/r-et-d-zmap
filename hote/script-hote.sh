@@ -6,15 +6,15 @@ ip_cible1="192.168.159.138"
 ip_cible2="192.168.159.139"
 
 echo "1 : installation zmap" 
-echo "2 : execution du scan"
+echo "2 : execution du scan 				[liste ip par défaut]"
 echo "3 : comparaison des resultats" 
-echo "4 : execution du scan sur plusieurs machines" 
+echo "4 : execution du scan sur plusieurs machines 	[classic]" 
 read choix 
 
 function installation-classic(){
 	sudo apt update && sudo apt upgrade -y 
 	echo "installation des dépendances" 
-	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev git
+	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev git parallel
 	echo "installation du logiciel" 
 	git clone https://github.com/zmap/zmap.git
 	mv zmap zmap-classic
@@ -32,7 +32,7 @@ function installation-openmp(){
 	sudo apt update && sudo apt upgrade -y
 	echo "zmap openmp pas encore disponible"
 	echo "installation des dépendances" 
-	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev
+	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev parallel
 	echo "installation du logiciel" 
 	git clone https://github.com/zmap/zmap.git
 	mv zmap zmap-openmp
@@ -51,7 +51,7 @@ function installation-mpi(){
 	sudo apt update && sudo apt upgrade -y
 	echo "zmap mpi pas encore disponible"
 	echo "installation des dépendances" 
-	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev
+	sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev libjudy-dev parallel
 	echo "installation du logiciel" 
 	git clone https://github.com/zmap/zmap.git
 	mv zmap zmap-mpi
@@ -98,6 +98,12 @@ function commande2(){
 	time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 $ip_cible2 > ./file/output2.csv &
 }
 
+function commande3(){
+	sudo echo ""
+	time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 $ip_cible1 > ./file/output1.csv &
+	time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p 1-33767 $ip_cible2 > ./file/output2.csv &
+}
+
 function automat(){
 	debut=$(head -n 1 ./automat.txt | cut -c1-20)
 	fin=$(tail -n 1 ./automat.txt | cut -c1-20)
@@ -123,6 +129,7 @@ then
 	echo "voulez vous lancer le scan dans une seule commande ou dans plusieurs commandes ?"
  	echo "1 : une seule commande"
   	echo "2 : plusieurs commandes"
+	echo "3 : cli parallel"
    	read choix2 
     	if [ $choix2 == 1 ]
      	then
@@ -132,6 +139,10 @@ then
   	then 
    		commande2
      	fi
+	if [ $choix2 == 3 ]
+	then
+		commande3
+	fi
 fi
 
 if [ $choix == 3 ]
