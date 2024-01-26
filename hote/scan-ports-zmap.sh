@@ -51,12 +51,14 @@ function scan_deux_machines(){
 		sudo echo ""
 		ip1=$(echo $liste_2ip_default | tr ' ' '\n' | sed -n '1p')
 		ip2=$(echo $liste_2ip_default | tr ' ' '\n' | sed -n '2p')
-		#ip1=$(echo $liste_2ip_default | cut -c-15)
-		#ip2=$(echo $liste_2ip_default | cut -c16-31)
-		#echo "ip 1 : $ip1"
-		#echo "ip 2 : $ip2"
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip1 >> ./file/output.csv &
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip2 >> ./file/output.csv &
+#		echo "ip 1 : $ip1"
+#		echo "ip 2 : $ip2"
+		#Execution dans différent processus avec & 
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip1 >> ./file/output.csv &
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip2 >> ./file/output.csv &
+		
+		#execution avec GNU parallel 
+		parallel --tag -j2 time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default ::: $ip1 ::: $ip2 > ./file/output.csv
 	else 
 		liste=""
 		for (( i=1; i<= 2; i++ ))
@@ -74,8 +76,9 @@ function scan_deux_machines(){
 		#echo "ip 2 : $ip2"
 		echo "exécution du scan :"
 		sudo echo ""
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip1 >> ./file/output.csv &
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip2 >> ./file/output.csv &
+		parallel --tag -j2 time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default ::: $ip1 ::: $ip2 > ./file/output.csv
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip1 >> ./file/output.csv &
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip2 >> ./file/output.csv &
 #		echo ${liste[@]} | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports {} > ports.csv
 #		echo ${liste[1]} | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports {} > ports.csv
 	
@@ -102,13 +105,13 @@ function scan_trois_machines(){
 		ip1=$(echo $liste_3ip_default | tr ' ' '\n' | sed -n '1p')
 		ip2=$(echo $liste_3ip_default | tr ' ' '\n' | sed -n '2p')
 		ip3=$(echo $liste_3ip_default | tr ' ' '\n' | sed -n '3p')
-		#ip1=$(echo $liste_ip_default | cut -c-15)
-		#ip2=$(echo $liste_ip_default | cut -c16-31)
-		#echo "ip 1 : $ip1"
-		#echo "ip 2 : $ip2"
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip1 >> ./file/output.csv &
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip2 >> ./file/output.csv &
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip3 >> ./file/output.csv &
+#		echo "ip 1 : $ip1"
+#		echo "ip 2 : $ip2"
+#		echo "ip 3 : $ip3"
+		parallel --tag -j3 time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default ::: $ip1 ::: $ip2 ::: $ip3 > ./file/output.csv
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip1 >> ./file/output.csv &
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip2 >> ./file/output.csv &
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip3 >> ./file/output.csv &
 	else 
 		liste=""
 		for (( i=1; i<= 3; i++ ))
@@ -123,13 +126,15 @@ function scan_trois_machines(){
 		ip1=$(echo $liste | tr ' ' '\n' | sed -n '1p')
 		ip2=$(echo $liste | tr ' ' '\n' | sed -n '2p')
 		ip3=$(echo $liste | tr ' ' '\n' | sed -n '3p')
-		#echo "ip 1 : $ip1"
-		#echo "ip 2 : $ip2"
+#		echo "ip 1 : $ip1"
+#		echo "ip 2 : $ip2"
+#		echo "ip 3 : $ip3"
 		echo "exécution du scan :"
 		sudo echo ""
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip1 >> ./file/output.csv &
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip2 >> ./file/output.csv &
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip3 >> ./file/output.csv &
+		parallel --tag -j3 time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports ::: $ip1 ::: $ip2 ::: $ip3 > ./file/output.csv
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip1 >> ./file/output.csv &
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip2 >> ./file/output.csv &
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip3 >> ./file/output.csv &
 #		echo ${liste[@]} | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports {} > ports.csv
 #		echo ${liste[1]} | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports {} > ports.csv
 	
@@ -156,16 +161,15 @@ function scan_quatre_machines(){
 		ip2=$(echo $liste_4ip_default | tr ' ' '\n' | sed -n '2p')
 		ip3=$(echo $liste_4ip_default | tr ' ' '\n' | sed -n '3p')
 		ip4=$(echo $liste_4ip_default | tr ' ' '\n' | sed -n '4p')
-		#ip1=$(echo $liste_ip_default | cut -c-15)
-		#ip2=$(echo $liste_ip_default | cut -c16-31)
 #		echo "ip 1 : $ip1"
 #		echo "ip 2 : $ip2"
 #		echo "ip 3 : $ip3"
 #		echo "ip 4 : $ip4"
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip1 >> ./file/output.csv &
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip2 >> ./file/output.csv &
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip3 >> ./file/output.csv &
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip4 >> ./file/output.csv &
+		parallel --tag -j4 time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default ::: $ip1 ::: $ip2 ::: $ip3 ::: $ip4 > ./file/output.csv
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip1 >> ./file/output.csv &
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip2 >> ./file/output.csv &
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip3 >> ./file/output.csv &
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip4 >> ./file/output.csv &
 	else 
 		liste=""
 		for (( i=1; i<= 4; i++ ))
@@ -187,10 +191,11 @@ function scan_quatre_machines(){
 #		echo "ip 2 : $ip2"
 #		echo "ip 3 : $ip3"
 #		echo "ip 4 : $ip4"
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip1 >> ./file/output.csv &
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip2 >> ./file/output.csv &
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip3 >> ./file/output.csv &
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip4 >> ./file/output.csv &
+		parallel --tag -j4 time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports ::: $ip1 ::: $ip2 ::: $ip3 ::: $ip4 > ./file/output.csv
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip1 >> ./file/output.csv &
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip2 >> ./file/output.csv &
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip3 >> ./file/output.csv &
+#		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip4 >> ./file/output.csv &
 #		echo ${liste[@]} | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports {} > ports.csv
 #		echo ${liste[1]} | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports {} > ports.csv
 	
