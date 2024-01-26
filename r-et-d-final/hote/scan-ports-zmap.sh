@@ -5,7 +5,7 @@ liste_2ip_default="192.168.159.138 192.168.159.139"
 liste_3ip_default="192.168.159.138 192.168.159.139 192.168.159.131"
 liste_4ip_default="192.168.159.138 192.168.159.139 192.168.159.140 192.168.159.131"
 ports_default="1-33767"
-args_zmap="-output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row"
+args_zmap="--output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row"
 
 function scan_une_machine(){
 	echo "voulez vous utiliser l'ip par défaut ? Y/n" 
@@ -13,7 +13,8 @@ function scan_une_machine(){
 	if [ $default == "Y" ] || [ $default == "y" ]
 	then 
 		sudo echo "scan de la machine $single_ip_default"
-		echo $single_ip_default | parallel time sudo zmap $args_zmap -p $ports_default {} > ./file/output.csv
+		#echo $single_ip_default | parallel time sudo zmap $args_zmap -p $ports_default {} > ./file/output.csv
+		parallel --tag -j1 time sudo zmap $args_zmap -p $ports_default ::: $single_ip_default > ./file/output.csv
 		nb_port=$(wc -l ./file/output.csv | tr ' ' '\n' | sed -n '1p')
 		if [ $nb_port == 500 ]
 		then
