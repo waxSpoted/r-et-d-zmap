@@ -10,16 +10,30 @@ function scan_une_machine(){
 	if [ $default == "Y" ] || [ $default == "y" ]
 	then 
 		sudo echo ""
-		echo $single_ip_default | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports_default {} > ports.csv
-		echo "vous pouvez voir les ports ouverts dans ports.csv"
+		echo $single_ip_default | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports_default {} > ./file/output.csv
+		nb_port=$(wc -l ./file/output.csv | tr ' ' '\n' | sed -n '1p')
+		if [ $nb_port == 500 ]
+		then
+			echo "tous les ports ont été découvert"
+		else
+			echo "tous les ports n'ont pas été découvert"
+		fi
+		echo "vous pouvez voir les ports ouverts dans ./file/output.csv"
 	else 
 		echo "Quelle est l'ip de la machine que vous voulez scanner ?"
 		read ip 
 		echo "Quels sont les ports que vous voulez scanner ? 1-xxxxx"
 		read ports
 		sudo echo ""
-		echo $ip | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports {} > ports.csv
-		echo "vous pouvez voir les ports ouverts dans ports.csv"
+		echo $ip | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports {} > ./file/output.csv
+		nb_port=$(wc -l ./file/output.csv | tr ' ' '\n' | sed -n '1p')
+		if [ $nb_port == 500 ]
+		then
+			echo "tous les ports ont été découvert"
+		else
+			echo "tous les ports n'ont pas été découvert"
+		fi
+		echo "vous pouvez voir les ports ouverts dans ./file/output.csv"
 	fi
 }
 
@@ -35,10 +49,10 @@ function scan_plusieurs_machines(){
 		sudo echo ""
 		ip1=$(echo $liste_ip_default | cut -c-15)
 		ip2=$(echo $liste_ip_default | cut -c16-31)
-#		echo "ip 1 : $ip1"
-#		echo "ip 2 : $ip2"
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip1 > ./file/output1.csv &
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip2 > ./file/output2.csv &
+		#echo "ip 1 : $ip1"
+		#echo "ip 2 : $ip2"
+		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip1 >> ./file/output.csv &
+		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip2 >> ./file/output.csv &
 	else 
 		echo "Combien de machines voulez-vous scanner ?"
 		read nombre
@@ -51,16 +65,15 @@ function scan_plusieurs_machines(){
 		done
 		echo "Quels sont les ports que vous voulez scanner ? 1-xxxx"
 		read ports
-#		echo "liste : $liste"
+		#echo "liste : $liste"
 		ip1=$(echo $liste | cut -c-15)
 		ip2=$(echo $liste | cut -c16-31)
-#		echo "ip 1 : $ip1"
-#		echo "ip 2 : $ip2"
+		#echo "ip 1 : $ip1"
+		#echo "ip 2 : $ip2"
 		echo "exécution du scan :"
 		sudo echo ""
 		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip1 >> ./file/output.csv &
 		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip2 >> ./file/output.csv &
-	
 #		echo ${liste[@]} | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports {} > ports.csv
 #		echo ${liste[1]} | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports {} > ports.csv
 	
@@ -70,6 +83,7 @@ function scan_plusieurs_machines(){
 #			echo "ip : $i"
 #		done
 	fi
+	echo "vous pouvez retrouver les ports ouverts dans ./file/output.csv"
 }
 
 function scan_classique(){
@@ -86,11 +100,27 @@ function scan_classique(){
 		then 
 			sudo echo ""
 			time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $single_ip_default > ./file/output.csv 
+			nb_port=$(wc -l ./file/output.csv | tr ' ' '\n' | sed -n '1p')
+			if [ $nb_port == 500 ]
+			then
+				echo "tous les ports ont été découvert"
+			else
+				echo "tous les ports n'ont pas été découvert"
+			fi
+			echo "vous pouvez voir les ports ouverts dans ./file/output.csv"
 		fi
 		if [ $choix == 2 ]
 		then 	
 			sudo echo ""
 			time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $liste_ip_default > ./file/output.csv 
+			nb_port=$(wc -l ./file/output.csv | tr ' ' '\n' | sed -n '1p')
+			if [ $nb_port == 1000 ]
+			then
+				echo "tous les ports ont été découvert"
+			else
+				echo "tous les ports n'ont pas été découvert"
+			fi
+			echo "vous pouvez voir les ports ouverts dans ./file/output.csv"
 		fi 
 	else 
 		echo "Veuillez entrer l'ip ou les ip : "
@@ -99,6 +129,8 @@ function scan_classique(){
 		read ports 
 		sudo echo ""
 		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip > ./file/output.csv 
+		nb_port=$(wc -l ./file/output.csv | tr ' ' '\n' | sed -n '1p')
+		echo "vous pouvez voir les $nb_port ports ouverts dans ./file/output.csv"
 	fi
 }
 
