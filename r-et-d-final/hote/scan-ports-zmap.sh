@@ -14,7 +14,7 @@ function scan_une_machine(){
 	then 
 		sudo echo "scan de la machine $single_ip_default"
 		#echo $single_ip_default | parallel time sudo zmap $args_zmap -p $ports_default {} > ./file/output.csv
-		parallel --tag -j1 time sudo zmap $args_zmap -p $ports_default ::: $single_ip_default > ./file/output.csv
+		parallel -j1 time sudo zmap $args_zmap -p $ports_default ::: $single_ip_default > ./file/output.csv
 		nb_port=$(wc -l ./file/output.csv | tr ' ' '\n' | sed -n '1p')
 		if [ $nb_port == 500 ]
 		then
@@ -29,7 +29,8 @@ function scan_une_machine(){
 		echo "Quels sont les ports que vous voulez scanner ? 1-xxxxx"
 		read ports
 		sudo echo "scan de la machine $ip"
-		echo $ip | parallel time sudo zmap $args_zmap -p $ports {} > ./file/output.csv
+		#echo $ip | parallel time sudo zmap $args_zmap -p $ports {} > ./file/output.csv
+		parallel -j1 time sudo zmap $args_zmap -p $ports ::: $ip > ./file/output.csv
 		nb_port=$(wc -l ./file/output.csv | tr ' ' '\n' | sed -n '1p')
 		if [ $nb_port == 500 ]
 		then
@@ -60,7 +61,7 @@ function scan_deux_machines(){
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip2 >> ./file/output.csv &
 		
 		#execution avec GNU parallel 
-		parallel --tag -j2 time sudo zmap $args_zmap -p $ports_default ::: $ip1 ::: $ip2 > ./file/output.csv
+		parallel -j2 time sudo zmap $args_zmap -p $ports_default ::: $ip1 ::: $ip2 > ./file/output.csv
 	else 
 		liste=""
 		for (( i=1; i<= 2; i++ ))
@@ -78,7 +79,7 @@ function scan_deux_machines(){
 		#echo "ip 2 : $ip2"
 		echo "exécution du scan :"
 		sudo echo "scan des machines $ip1 et $ip2"
-		parallel --tag -j2 time sudo zmap $args_zmap -p $ports_default ::: $ip1 ::: $ip2 > ./file/output.csv
+		parallel -j2 time sudo zmap $args_zmap -p $ports_default ::: $ip1 ::: $ip2 > ./file/output.csv
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip1 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip2 >> ./file/output.csv &
 #		echo ${liste[@]} | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports {} > ports.csv
@@ -110,7 +111,7 @@ function scan_trois_machines(){
 #		echo "ip 1 : $ip1"
 #		echo "ip 2 : $ip2"
 #		echo "ip 3 : $ip3"
-		parallel --tag -j3 time sudo zmap $args_zmap -p $ports_default ::: $ip1 ::: $ip2 ::: $ip3 > ./file/output.csv
+		parallel -j3 time sudo zmap $args_zmap -p $ports_default ::: $ip1 ::: $ip2 ::: $ip3 > ./file/output.csv
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip1 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip2 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip3 >> ./file/output.csv &
@@ -133,7 +134,7 @@ function scan_trois_machines(){
 #		echo "ip 3 : $ip3"
 		echo "exécution du scan :"
 		sudo echo "scan des machines $ip1 , $ip2 et $ip3"
-		parallel --tag -j3 time sudo zmap $args_zmap -p $ports ::: $ip1 ::: $ip2 ::: $ip3 > ./file/output.csv
+		parallel -j3 time sudo zmap $args_zmap -p $ports ::: $ip1 ::: $ip2 ::: $ip3 > ./file/output.csv
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip1 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip2 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip3 >> ./file/output.csv &
@@ -167,7 +168,7 @@ function scan_quatre_machines(){
 #		echo "ip 2 : $ip2"
 #		echo "ip 3 : $ip3"
 #		echo "ip 4 : $ip4"
-		parallel --tag -j4 time sudo zmap $args_zmap -p $ports_default ::: $ip1 ::: $ip2 ::: $ip3 ::: $ip4 > ./file/output.csv
+		parallel -j4 time sudo zmap $args_zmap -p $ports_default ::: $ip1 ::: $ip2 ::: $ip3 ::: $ip4 > ./file/output.csv
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip1 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip2 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip3 >> ./file/output.csv &
@@ -193,7 +194,7 @@ function scan_quatre_machines(){
 #		echo "ip 2 : $ip2"
 #		echo "ip 3 : $ip3"
 #		echo "ip 4 : $ip4"
-		parallel --tag -j4 time sudo zmap $args_zmap -p $ports ::: $ip1 ::: $ip2 ::: $ip3 ::: $ip4 > ./file/output.csv
+		parallel -j4 time sudo zmap $args_zmap -p $ports ::: $ip1 ::: $ip2 ::: $ip3 ::: $ip4 > ./file/output.csv
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip1 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip2 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip3 >> ./file/output.csv &
@@ -335,11 +336,11 @@ function comparaison(){
 			pwd1="./file/port3.csv"
 		fi
 		
-		liste1=$(head -n 500 ./file/output.csv | awk '{print $NF}')
+		liste1=$(cat ./file/output.csv)
 		
 		for i in $liste1
 		do
-			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] 
+			if [ $(grep $i $pwd1) ] 
 			then
 				res=$((res+1))
 			fi
@@ -386,23 +387,23 @@ function comparaison(){
 			pwd2="./file/port3.csv"
 		fi
 		
-		liste1=$(sed -n '1,500p' ./file/output.csv | awk '{print $NF}')
-		liste2=$(sed -n '501,1000p' ./file/output.csv | awk '{print $NF}')
+		liste=$(cat ./file/output.csv)
+		#liste2=$(sed -n '501,1000p' ./file/output.csv | awk '{print $NF}')
 		
-		for i in $liste1
+		for i in $liste
 		do
 			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] 
 			then
 				res=$((res+1))
 			fi
 		done
-		for i in $liste2
-		do
-			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] 
-			then
-				res=$((res+1))
-			fi
-		done
+#		for i in $liste2
+#		do
+#			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] 
+#			then
+#				res=$((res+1))
+#			fi
+#		done
 
 		if [ $res == 1000 ]
 		then 
@@ -460,31 +461,31 @@ function comparaison(){
 			pwd3="./file/port3.csv"
 		fi
 		
-		liste1=$(sed -n '1,500p' ./file/output.csv | awk '{print $NF}')
-		liste2=$(sed -n '501,1000p' ./file/output.csv | awk '{print $NF}')
-		liste3=$(sed -n '1001,1500p' ./file/output.csv | awk '{print $NF}')
+		liste=$(cat ./file/output.csv)
+#		liste2=$(sed -n '501,1000p' ./file/output.csv | awk '{print $NF}')
+#		liste3=$(sed -n '1001,1500p' ./file/output.csv | awk '{print $NF}')
 		
-		for i in $liste1
+		for i in $liste
 		do
 			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ]
 			then
 				res=$((res+1))
 			fi
 		done
-		for i in $liste2
-		do
-			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ]
-			then
-				res=$((res+1))
-			fi
-		done
-		for i in $liste3
-		do
-			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ]
-			then
-				res=$((res+1))
-			fi
-		done
+#		for i in $liste2
+#		do
+#			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ]
+#			then
+#				res=$((res+1))
+#			fi
+#		done
+#		for i in $liste3
+#		do
+#			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ]
+#			then
+#				res=$((res+1))
+#			fi
+#		done
 		if [ $res == 1500 ]
 		then 
 			echo "tous les ports ont été trouvé" 
@@ -557,39 +558,39 @@ function comparaison(){
 			pwd4="./file/port3.csv"
 		fi
 
-		liste1=$(sed -n '1,500p' ./file/output.csv | awk '{print $NF}')
-		liste2=$(sed -n '501,1000p' ./file/output.csv | awk '{print $NF}')
-		liste3=$(sed -n '1001,1500p' ./file/output.csv | awk '{print $NF}')
-		liste4=$(sed -n '1501,2000p' ./file/output.csv | awk '{print $NF}')
+		liste=$(cat ./file/output.csv)
+#		liste2=$(sed -n '501,1000p' ./file/output.csv | awk '{print $NF}')
+#		liste3=$(sed -n '1001,1500p' ./file/output.csv | awk '{print $NF}')
+#		liste4=$(sed -n '1501,2000p' ./file/output.csv | awk '{print $NF}')
 		
-		for i in $liste1
+		for i in $liste
 		do
 			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ] || [ $(grep $i $pwd4) ]
 			then
 				res=$((res+1))
 			fi
 		done
-		for i in $liste2
-		do
-			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ] || [ $(grep $i $pwd4) ]
-			then
-				res=$((res+1))
-			fi
-		done
-		for i in $liste3
-		do
-			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ] || [ $(grep $i $pwd4) ]
-			then
-				res=$((res+1))
-			fi
-		done
-		for i in $liste4
-		do
-			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ] || [ $(grep $i $pwd4) ]
-			then
-				res=$((res+1))
-			fi
-		done
+#		for i in $liste2
+#		do
+#			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ] || [ $(grep $i $pwd4) ]
+#			then
+#				res=$((res+1))
+#			fi
+#		done
+#		for i in $liste3
+#		do
+#			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ] || [ $(grep $i $pwd4) ]
+#			then
+#				res=$((res+1))
+#			fi
+#		done
+#		for i in $liste4
+#		do
+#			if [ $(grep $i $pwd1) ] || [ $(grep $i $pwd2) ] || [ $(grep $i $pwd3) ] || [ $(grep $i $pwd4) ]
+#			then
+#				res=$((res+1))
+#			fi
+#		done
 		if [ $res == 2000 ]
 		then 
 			echo "tous les ports ont été trouvé" 
