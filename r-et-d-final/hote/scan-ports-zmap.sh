@@ -5,6 +5,7 @@ liste_2ip_default="192.168.159.138 192.168.159.139"
 liste_3ip_default="192.168.159.138 192.168.159.139 192.168.159.131"
 liste_4ip_default="192.168.159.138 192.168.159.139 192.168.159.140 192.168.159.131"
 ports_default="1-33767"
+args_zmap="-output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row"
 
 function scan_une_machine(){
 	echo "voulez vous utiliser l'ip par défaut ? Y/n" 
@@ -12,7 +13,7 @@ function scan_une_machine(){
 	if [ $default == "Y" ] || [ $default == "y" ]
 	then 
 		sudo echo "scan de la machine $single_ip_default"
-		echo $single_ip_default | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports_default {} > ./file/output.csv
+		echo $single_ip_default | parallel time sudo zmap $args_zmap -p $ports_default {} > ./file/output.csv
 		nb_port=$(wc -l ./file/output.csv | tr ' ' '\n' | sed -n '1p')
 		if [ $nb_port == 500 ]
 		then
@@ -27,7 +28,7 @@ function scan_une_machine(){
 		echo "Quels sont les ports que vous voulez scanner ? 1-xxxxx"
 		read ports
 		sudo echo "scan de la machine $ip"
-		echo $ip | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports {} > ./file/output.csv
+		echo $ip | parallel time sudo zmap $args_zmap -p $ports {} > ./file/output.csv
 		nb_port=$(wc -l ./file/output.csv | tr ' ' '\n' | sed -n '1p')
 		if [ $nb_port == 500 ]
 		then
@@ -58,7 +59,7 @@ function scan_deux_machines(){
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip2 >> ./file/output.csv &
 		
 		#execution avec GNU parallel 
-		parallel --tag -j2 time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default ::: $ip1 ::: $ip2 > ./file/output.csv
+		parallel --tag -j2 time sudo zmap $args_zmap -p $ports_default ::: $ip1 ::: $ip2 > ./file/output.csv
 	else 
 		liste=""
 		for (( i=1; i<= 2; i++ ))
@@ -76,7 +77,7 @@ function scan_deux_machines(){
 		#echo "ip 2 : $ip2"
 		echo "exécution du scan :"
 		sudo echo "scan des machines $ip1 et $ip2"
-		parallel --tag -j2 time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default ::: $ip1 ::: $ip2 > ./file/output.csv
+		parallel --tag -j2 time sudo zmap $args_zmap -p $ports_default ::: $ip1 ::: $ip2 > ./file/output.csv
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip1 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip2 >> ./file/output.csv &
 #		echo ${liste[@]} | parallel time sudo zmap --output-module=csv --output-fields=sport --output-filter=\"\" --no-header-row -p $ports {} > ports.csv
@@ -108,7 +109,7 @@ function scan_trois_machines(){
 #		echo "ip 1 : $ip1"
 #		echo "ip 2 : $ip2"
 #		echo "ip 3 : $ip3"
-		parallel --tag -j3 time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default ::: $ip1 ::: $ip2 ::: $ip3 > ./file/output.csv
+		parallel --tag -j3 time sudo zmap $args_zmap -p $ports_default ::: $ip1 ::: $ip2 ::: $ip3 > ./file/output.csv
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip1 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip2 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip3 >> ./file/output.csv &
@@ -131,7 +132,7 @@ function scan_trois_machines(){
 #		echo "ip 3 : $ip3"
 		echo "exécution du scan :"
 		sudo echo "scan des machines $ip1 , $ip2 et $ip3"
-		parallel --tag -j3 time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports ::: $ip1 ::: $ip2 ::: $ip3 > ./file/output.csv
+		parallel --tag -j3 time sudo zmap $args_zmap -p $ports ::: $ip1 ::: $ip2 ::: $ip3 > ./file/output.csv
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip1 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip2 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip3 >> ./file/output.csv &
@@ -165,7 +166,7 @@ function scan_quatre_machines(){
 #		echo "ip 2 : $ip2"
 #		echo "ip 3 : $ip3"
 #		echo "ip 4 : $ip4"
-		parallel --tag -j4 time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default ::: $ip1 ::: $ip2 ::: $ip3 ::: $ip4 > ./file/output.csv
+		parallel --tag -j4 time sudo zmap $args_zmap -p $ports_default ::: $ip1 ::: $ip2 ::: $ip3 ::: $ip4 > ./file/output.csv
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip1 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip2 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $ip3 >> ./file/output.csv &
@@ -191,7 +192,7 @@ function scan_quatre_machines(){
 #		echo "ip 2 : $ip2"
 #		echo "ip 3 : $ip3"
 #		echo "ip 4 : $ip4"
-		parallel --tag -j4 time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports ::: $ip1 ::: $ip2 ::: $ip3 ::: $ip4 > ./file/output.csv
+		parallel --tag -j4 time sudo zmap $args_zmap -p $ports ::: $ip1 ::: $ip2 ::: $ip3 ::: $ip4 > ./file/output.csv
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip1 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip2 >> ./file/output.csv &
 #		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip3 >> ./file/output.csv &
@@ -224,6 +225,7 @@ function scan_classique(){
 		then 
 			sudo echo ""
 			time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $single_ip_default > ./file/output.csv 
+			#time sudo zmap $args_zmap -p $ports_default $single_ip_default > ./file/output.csv 
 			nb_port=$(wc -l ./file/output.csv | tr ' ' '\n' | sed -n '1p')
 			if [ $nb_port == 500 ]
 			then
@@ -237,6 +239,7 @@ function scan_classique(){
 		then 	
 			sudo echo ""
 			time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $liste_2ip_default > ./file/output.csv 
+			#time sudo zmap $args -p $ports_default $liste_2ip_default > ./file/output.csv 
 			nb_port=$(wc -l ./file/output.csv | tr ' ' '\n' | sed -n '1p')
 			if [ $nb_port == 1000 ]
 			then
@@ -249,6 +252,7 @@ function scan_classique(){
 		if [ $choix == 3 ]
 		then 	
 			sudo echo ""
+			#time sudo zmap $args -p $ports_default $liste_3ip_default > ./file/output.csv 
 			time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $liste_3ip_default > ./file/output.csv 
 			nb_port=$(wc -l ./file/output.csv | tr ' ' '\n' | sed -n '1p')
 			if [ $nb_port == 1500 ]
@@ -262,6 +266,7 @@ function scan_classique(){
 		if [ $choix == 4 ]
 		then 	
 			sudo echo ""
+			#time sudo zmap $args -p $ports_default $liste_4ip_default > ./file/output.csv 
 			time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports_default $liste_4ip_default > ./file/output.csv 
 			nb_port=$(wc -l ./file/output.csv | tr ' ' '\n' | sed -n '1p')
 			if [ $nb_port == 2000 ]
@@ -278,7 +283,7 @@ function scan_classique(){
 		echo "Quels sont les ports que vous voulez scanner ? 1-xxxx"
 		read ports 
 		sudo echo ""
-		time sudo zmap --output-module=csv --output-fields=sport --output-filter="" --no-header-row -p $ports $ip > ./file/output.csv 
+		time sudo zmap $args -p $ports $ip > ./file/output.csv 
 		nb_port=$(wc -l ./file/output.csv | tr ' ' '\n' | sed -n '1p')
 		echo "vous pouvez voir les $nb_port ports ouverts dans ./file/output.csv"
 	fi
